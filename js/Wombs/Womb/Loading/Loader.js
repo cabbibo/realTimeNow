@@ -6,7 +6,7 @@ define(function(require, exports, module) {
 
     this.params = _.defaults( params || {}, {
       numberToLoad:   1,
-      loadGif:        "/lib/img/gifs/loadGif.gif",
+      loadGif:        "lib/img/gifs/loadGif.gif",
       videoWidth: 500,
       videoHeight: 281
     });
