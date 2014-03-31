@@ -13,7 +13,6 @@ define(function(require, exports, module) {
   var Tweener           = require( 'Womb/Tweener'                   );
   
   var Raycaster         = require( 'Womb/Raycaster'                 );
-  var EffectComposer    = require( 'Womb/EffectComposer'            );
 
   var AudioController   = require( 'Womb/Audio/AudioController'     );
 
