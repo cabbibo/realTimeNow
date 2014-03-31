@@ -71,7 +71,7 @@ define(function(require, exports, module) {
     Fractal 1
 
   */
-  womb.modelLoader.loadFile( 'OBJ' , '/lib/demoModels/LeePerrySmith.obj' , function( object ){
+  womb.modelLoader.loadFile( 'OBJ' , 'lib/demoModels/LeePerrySmith.obj' , function( object ){
 
     if( object[0] instanceof THREE.Mesh ){
     }

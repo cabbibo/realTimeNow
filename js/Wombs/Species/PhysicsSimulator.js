@@ -83,7 +83,7 @@ define(function(require, exports, module) {
         depthWrite: false,
         transparent: true,
         fog: true, 
-        map: THREE.ImageUtils.loadTexture( '/lib/img/particles/lensFlare.png' ),
+        map: THREE.ImageUtils.loadTexture( 'lib/img/particles/lensFlare.png' ),
         opacity:    1.0,
       }
 
