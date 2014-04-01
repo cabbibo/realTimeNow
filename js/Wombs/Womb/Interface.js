@@ -86,7 +86,7 @@ define( function( require , exports , module ){
       a.href = this.womb.params.social[i][1];
       a.target = '_blank';
 
-      a.style.background = 'url(../lib/img/icons/'+this.womb.params.social[i][0]+')';
+      a.style.background = 'url(lib/img/icons/'+this.womb.params.social[i][0]+')';
       a.style.backgroundSize = '100%';
      /* a.style.width = '25px';
       a.style.height = '25px';
