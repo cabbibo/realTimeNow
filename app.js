@@ -30,11 +30,24 @@ define(function(require, exports, module) {
 
   var link = 'https://wom.bs';
   var info =  "Audio: <a href='https://soundcloud.com/rioux' target='_blank'> Lucifer - Rioux </a><br/>Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
-  
+ 
+  var socialLinks = [
+
+
+    [ 'facebook_1.png'  , 'http://www.facebook.com/sharer.php?u=http://cabbibo.github.io/realTimeNow/' ],
+    [ 'twitter_1.png'   , "http://twitter.com/share?text=Good%20God%20@cabbibo%20is%20pretenious.%20&url=http://cabbibo.github.io/realTimeNow/" ],
+    //[ 'soundcloud_1.png' , 'http://soundcloud.com/avalonemerson' ],
+    //[ 'cabbibo_1.png'   , 'http://twitter.com/cabbibo' ],
+    //[ 'avalon_1.png'    , 'http://twitter.com/avalon_emerson' ],
+   // [ 'iceeHot_1.png'   , 'http://iceehot.com'      ]
+
+  ]
+
   var womb = new Womb({
     //stats:    true,
     title: 'Real Time is Now',
-    summary: info
+    summary: info,
+    socialLinks: socialLinks
   });
 
   var file  = 'lib/audio/siggraph.mp3' ;
