@@ -52,9 +52,9 @@ define(function(require, exports, module) {
 
     // If you want a margin, you can define it in the params
     if( !params.margin )
-      margin = size*.5;
+      margin = size*.5 * scaleFactor;
     else
-      margin = params.margin;
+      margin = params.margin * scaleFactor;
 
     // Gets how wide the tesxt is
     ctx.font      = fullSize + "pt " + this.font;
@@ -119,8 +119,7 @@ define(function(require, exports, module) {
       
       color:      this.params.color,
       size:       this.params.size,
-      crispness:  this.params.crispness
-          
+      crispness:  this.params.crispness 
     });
 
     var texture = this.createTexture( string , params );

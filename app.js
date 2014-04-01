@@ -28,19 +28,21 @@ define(function(require, exports, module) {
   
   var placementFunctions  = require( 'Utils/PlacementFunctions'       );
 
-  var link = 'https://soundcloud.com/disclosuremusic';
-  var info =  "Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
+  var link = 'https://wom.bs';
+  var info =  "Audio: <a href='https://soundcloud.com/rioux' target='_blank'> Lucifer - Rioux </a><br/>Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   var womb = new Womb({
     stats:    true,
+    title: 'Real Time is Now',
+    summary: info
   });
 
-  var file  = 'lib/audio/voice.mp3' ;
-  var audio = womb.audioController.createStream( file );
-  var track = womb.audioController.createNote( 'lib/audio/lucifer.mp3' );
+  var file  = 'lib/audio/siggraph.mp3' ;
+  var audio = womb.audioController.createNote( file );
 
-  console.log( track );
-  womb.audio  = track;
+  womb.cameraController.controls.minDistance = 50;
+  womb.cameraController.controls.maxDistance = 300;
+  womb.audio  = audio;
   womb.voice = audio; 
 
   
@@ -64,8 +66,20 @@ define(function(require, exports, module) {
 
   }
 
-  console.log( audio );
- 
+  womb.words = [];
+  womb.currentWord = 0;
+
+  womb.nextWord = function(){
+
+    if( womb.words[womb.currentWord].exit )
+      womb.words[womb.currentWord].exit();
+    womb.currentWord ++;
+
+    if( womb.words[womb.currentWord].enter )
+      womb.words[womb.currentWord].enter();
+
+  }
+
   /*
   
     Fractal 1
@@ -153,6 +167,9 @@ define(function(require, exports, module) {
 
   });
 
+   womb.ps.particleSystem.scale.multiplyScalar( .3 );
+
+   womb.ps.body.scale.multiplyScalar( .3 );
 
   vertexChunk = [
 
@@ -511,12 +528,81 @@ define(function(require, exports, module) {
   womb.thing = womb.creator.createBeing();
 
   womb.thing.mesh = new Mesh( womb.thing , {
-      geometry: new THREE.IcosahedronGeometry( womb.size/20.0 , 6 ),
+      geometry: new THREE.IcosahedronGeometry( womb.size/2.0 , 6 ),
       material: womb.thingMaterial 
   });
 
   womb.thing.mesh.add();
 
+  /*
+
+     FADE
+
+  */
+
+  vertexChunk = [
+    
+    "nPos = normalize(pos);",
+    
+    "vec3 offset;",
+    
+    "offset.x = nPos.x + Time * .3;",
+    "offset.y = nPos.y + Time * .2;",
+    "offset.z = nPos.z + Time * .24;",
+    
+    "vec2 a = vec2( abs( nPos.y ) , 0.0 );",
+    
+    "float audio = texture2D( AudioTexture , a).r;",
+    "vDisplacement = NoisePower * snoise3( offset );",
+    "vDisplacement += AudioPower * audio * audio;",
+   
+    "pos *= .1 * abs( vDisplacement + 3.0 );",
+
+  ];
+
+  fragmentChunk = [
+
+    "color = abs( Color +.3 * abs(normalize(vPos_MV ))  + abs(nPos) + vDisplacement);",
+    "vec3 normalColor = normalize( color );",
+    "color += .1 * kali3( nPos , -1. * normalColor );",
+    "color = normalize( color ) * vDisplacement;",
+
+  ];
+
+  womb.fadeShader = new ShaderCreator({
+    vertexChunk:   vertexChunk,
+    fragmentChunk: fragmentChunk,
+    uniforms:{ 
+     
+      Time:         womb.time,
+      Color:        { type:"v3" , value: new THREE.Vector3( -.7 , -.8 , -.3 ) },
+      AudioTexture: { type:"t"  , value: womb.audio.texture },
+      NoisePower:   { type:"f"  , value: .9 },
+      AudioPower:   { type:"f"  , value: 1.4 }
+    
+    },
+
+  });
+
+  womb.fade = womb.creator.createBeing();
+
+  womb.fade.mesh = new Mesh( womb.fade , {
+
+      geometry: new THREE.SphereGeometry( womb.size / 4 , 3 , 1000 ),
+      material: womb.fadeShader.material
+  });
+
+  womb.fade.mesh.scale.y = 5;
+  womb.fade.mesh.rotation.z = Math.PI / 2 ;
+
+  womb.fade.mesh.add();
+
+
+  /*
+   
+     Logo
+
+  */
 
    womb.modelLoader.loadFile( 
     'OBJ' , 
@@ -571,6 +657,9 @@ define(function(require, exports, module) {
   
   );
 
+  
+  setTimeout( createTextMeshes, 1000 );
+
 
 
   womb.update = function(){
@@ -587,33 +676,111 @@ define(function(require, exports, module) {
 
   }
 
+  var offset = -1000;
   womb.start = function(){
- 
-    womb.slides.push( womb.fractal1 );
-    womb.slides.push( womb.fboParticles );
+
+   // womb.ps.body.position.z = -50;
+   // womb.clickableBeing.body.position.z = -50;
+    womb.fboParticles.body.position.z = -10;
+    womb.mandala1.body.position.z = -10;
+    womb.fractal1.body.position.z = -10;
+    womb.thing.body.position.z = -50;
+
     womb.slides.push( womb.ps );
+    womb.slides.push( womb.clickableBeing );
+    womb.slides.push( womb.fboParticles );
     womb.slides.push( womb.mandala1 );
     womb.slides.push( womb.fractal1 );
-    womb.slides.push( womb.clickableBeing );
     womb.slides.push( womb.thing );
-
+    womb.slides.push( womb.fade );
+    womb.slides.push( womb.fractal1 );
+    
 
     womb.slides[0].enter();
+
+    for( var i = 0; i < wordTiming.length; i++ ){
+      var t = wordTiming[i] * 1000;
+      t += offset;
+      window.setTimeout( womb.nextWord , t );
+
+    }
+
+    for( var i = 0; i < slideTiming.length; i++ ){
+      var t = slideTiming[i] * 1000;
+      t += offset;
+      window.setTimeout( womb.nextSlide , t );
+
+    }
+    
+    
     womb.audio.play();
     womb.voice.play();
 
   }
 
-  setTimeout( createTextMeshes, 1000 );
+
+  var slideTiming = [
+    42,
+    92,
+    158,
+    199,
+    213,
+    263,
+    301
+  ];
+  var wordTiming = [
+    30,
+    32,
+    35,
+    66,
+    74,
+    92,
+    96,
+    109,
+    112,
+    115,
+    142,
+    179,
+    183,
+    199,
+    206,
+    247,
+    302,
+    306,
+    316,
+    324,
+    339,
+    350,
+  ]
+
+
 
   function createTextMeshes(){
-  
-    womb.cabbibo      = createText( 'cabbibo' , 10  );
-    womb.presents     = createText( 'presents' , 50 );
-    womb.holly        = createText( 'HOLLY' ,  10 );
-    
-   
-  
+ 
+    womb.words.push( 1 );
+    womb.words.push( createText( 'Mouse' , 30 ) );
+    womb.words.push( createText( 'Voice' , 30 ) );
+    womb.words.push( 1 );
+    womb.words.push( createText( 'Programmer' , 30 ) );
+    womb.words.push( createText( 'Emotion' , 30 ) );
+    womb.words.push( createText( 'Stories' , 30 ) );
+    womb.words.push( 1 );
+    womb.words.push( createText( 'Weight' , 30 ) );
+    womb.words.push( createText( 'Spoken' , 30 ) );
+    womb.words.push( 1 );
+    womb.words.push( createText( 'Anything' , 30 ) );
+    womb.words.push( createText( 'Ambient Oculsion' , 30 ) );
+    womb.words.push( 1 );
+    womb.words.push( createText( 'Real Time Is Now' , 30 ) );
+    womb.words.push( createText( 'Present' , 30 ) );
+
+    womb.words.push( 1 );
+    womb.words.push( createText( 'Frontier' , 30 ) );
+    womb.words.push( createText( 'Interactive Storytelling' , 30 ) );
+    womb.words.push( createText( 'Graphics' , 30 ) );
+    womb.words.push( createText( 'Legends' , 30 ) );
+    womb.words.push( createText( 'NOW' , 30 ) );
+     
   };
 
 
@@ -635,7 +802,9 @@ define(function(require, exports, module) {
         u,
     ]);
 
-    var textTexture = womb.textCreator.createTexture( text );
+    var textTexture = womb.textCreator.createTexture( text , {
+      crispness: 10
+    });
     uniforms.time             = womb.time;
     uniforms.texture.value    = womb.audio.texture;
     uniforms.image.value      = textTexture;
@@ -698,9 +867,12 @@ define(function(require, exports, module) {
         AudioPower:   { type:"f"  , value: .2 + Math.random()*.2 }
       
       },
-      transparent: true
+      transparent: true,
+      side: THREE.DoubleSide
 
     });
+
+    textShader.material.side = THREE.DoubleSide
 
 
     var mesh = new THREE.Mesh( new THREE.PlaneGeometry(size , size )  , textShader.material );
