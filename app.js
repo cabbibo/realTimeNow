@@ -528,7 +528,7 @@ define(function(require, exports, module) {
   womb.thing = womb.creator.createBeing();
 
   womb.thing.mesh = new Mesh( womb.thing , {
-      geometry: new THREE.IcosahedronGeometry( womb.size/2.0 , 6 ),
+      geometry: new THREE.IcosahedronGeometry( womb.size/10.0 , 6 ),
       material: womb.thingMaterial 
   });
 
@@ -668,9 +668,9 @@ define(function(require, exports, module) {
 
     //console.log( womb.time );
 
-    var u = womb.thing.mesh.material.uniforms;
+    /*var u = womb.thing.mesh.material.uniforms;
     u.seed.value.x = ( Math.sin( womb.time.value / 1000.0 ) -1.0 ) / 2;
-    u.seed.value.y = ( Math.cos( womb.time.value / 1000.0 ) -1.0 ) / 2;
+    u.seed.value.y = ( Math.cos( womb.time.value / 1000.0 ) -1.0 ) / 2;*/
 
 
 
@@ -726,7 +726,8 @@ define(function(require, exports, module) {
     199,
     213,
     263,
-    301
+    301,
+    343
   ];
   var wordTiming = [
     30,
@@ -747,10 +748,10 @@ define(function(require, exports, module) {
     247,
     302,
     306,
-    316,
+    315,
     324,
+    328
     339,
-    350,
   ]
 
 
@@ -779,6 +780,8 @@ define(function(require, exports, module) {
     womb.words.push( createText( 'Interactive Storytelling' , 30 ) );
     womb.words.push( createText( 'Graphics' , 30 ) );
     womb.words.push( createText( 'Legends' , 30 ) );
+    womb.words.push( 1 );
+
     womb.words.push( createText( 'NOW' , 30 ) );
      
   };
