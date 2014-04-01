@@ -35,7 +35,7 @@ define(function(require, exports, module) {
 
 
     [ 'facebook_1.png'  , 'http://www.facebook.com/sharer.php?u=http://cabbibo.github.io/realTimeNow/' ],
-    [ 'twitter_1.png'   , "http://twitter.com/share?text=Good%20God%20@cabbibo%20is%20pretenious.%20&url=http://cabbibo.github.io/realTimeNow/" ],
+    [ 'twitter_1.png'   , "http://twitter.com/share?text=Good%20God%20@cabbibo%20is%20pretentious.%20&url=http://cabbibo.github.io/realTimeNow/" ],
     //[ 'soundcloud_1.png' , 'http://soundcloud.com/avalonemerson' ],
     //[ 'cabbibo_1.png'   , 'http://twitter.com/cabbibo' ],
     //[ 'avalon_1.png'    , 'http://twitter.com/avalon_emerson' ],
@@ -47,7 +47,7 @@ define(function(require, exports, module) {
     //stats:    true,
     title: 'Real Time is Now',
     summary: info,
-    socialLinks: socialLinks
+    social: socialLinks
   });
 
   var file  = 'lib/audio/siggraph.mp3' ;
