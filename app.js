@@ -32,7 +32,7 @@ define(function(require, exports, module) {
   var info =  "Audio: <a href='https://soundcloud.com/rioux' target='_blank'> Lucifer - Rioux </a><br/>Drag to spin, scroll to zoom,<br/> press 'x' to hide interface";
   
   var womb = new Womb({
-    stats:    true,
+    //stats:    true,
     title: 'Real Time is Now',
     summary: info
   });
@@ -528,7 +528,7 @@ define(function(require, exports, module) {
   womb.thing = womb.creator.createBeing();
 
   womb.thing.mesh = new Mesh( womb.thing , {
-      geometry: new THREE.IcosahedronGeometry( womb.size/10.0 , 6 ),
+      geometry: new THREE.IcosahedronGeometry( womb.size/4.0 , 6 ),
       material: womb.thingMaterial 
   });
 
@@ -750,7 +750,7 @@ define(function(require, exports, module) {
     306,
     315,
     324,
-    328
+    328,
     339,
   ]
 
